@@ -15,15 +15,24 @@ public class UserPrincipal implements UserDetails {
 
     private Long id;
 
-    private String username;
+    private String email;
 
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    private boolean accountNonExpired;
+
+    private boolean accountNonLocked;
+
+    private boolean credentialsNonExpired;
+
+    private boolean enabled;
+
+
     public UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities) {
         this.id = user.getId();
-        this.username = user.getEmail();
+        this.email = user.getEmail();
         this.password = user.getPassword();
         this.authorities = authorities;
     }
@@ -38,31 +47,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
