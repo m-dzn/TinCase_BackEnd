@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+    ddl-auto:   update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+messages:
+  basename: i18n/exception
+  encoding: UTF-8
+
+app:
+  jwt:
+    secretKey: 123456789123456789123456789123456789
+    expiration: 7200000
+
+  oauth2:
+    authorizedRedirectUris:
+      http://localhost:3000/oauth2/redirect

@@ -1,0 +1,14 @@
+dependencies {
+    implementation project(":tincase-core")
+
+    implementation "$boot:spring-boot-starter-validation"
+    implementation "$boot:spring-boot-starter-web"
+    implementation "$boot:spring-boot-starter-security"
+    implementation "$boot:spring-boot-starter-oauth2-client"
+
+    compileOnly "io.jsonwebtoken:jjwt-api:$jjwt"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwt"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwt"
+
+    implementation "net.rakugakibox.util:yaml-resource-bundle:1.2"
+}

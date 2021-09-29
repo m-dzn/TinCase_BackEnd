@@ -1,0 +1,71 @@
+buildscript {
+	ext {
+		spring = "2.5.4"
+		boot = "org.springframework.boot"
+		lombok = "org.projectlombok:lombok"
+		jjwt = "0.11.2"
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("$boot:spring-boot-gradle-plugin:$spring")
+	}
+}
+
+allprojects {
+	group = 'com.appleisle'
+	version = '1.0.0'
+}
+
+subprojects {
+	apply plugin: "java"
+	apply plugin: boot
+	apply plugin: "io.spring.dependency-management"
+	apply plugin: "idea"
+
+	repositories {
+		mavenCentral()
+	}
+
+	sourceCompatibility = 11
+	targetCompatibility = 11
+
+	dependencies {
+		implementation "$boot:spring-boot-starter-data-jpa"
+		implementation "$boot:spring-boot-starter-security"
+
+		compileOnly lombok
+		testCompileOnly lombok
+		annotationProcessor lombok
+		testAnnotationProcessor lombok
+
+		runtimeOnly 'com.h2database:h2'
+
+		testImplementation "$boot:spring-boot-starter-test"
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+}
+
+["core"].each {
+	def subProjectDir = new File(projectDir, it)
+
+	def projectName = ":${rootProject.name}-${subProjectDir.name}"
+	project(projectName) {
+		bootJar.enabled(false)
+		jar.enabled(true)
+	}
+}
+
+["user", "admin"].each {
+	def subProjectDir = new File(projectDir, it)
+
+	def projectName = ":${rootProject.name}-${subProjectDir.name}"
+	project(projectName) {
+		bootJar.enabled(false)
+		jar.enabled(true)
+	}
+}
