@@ -1,10 +1,7 @@
 package com.appleisle.tincase.exception.advice;
 
 import com.appleisle.tincase.dto.response.ErrorResponse;
-import com.appleisle.tincase.exception.EmailExistsException;
-import com.appleisle.tincase.exception.OAuth2ExistsException;
-import com.appleisle.tincase.exception.OAuth2InvalidProviderException;
-import com.appleisle.tincase.exception.UnauthorizedRedirectURIException;
+import com.appleisle.tincase.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -87,16 +84,26 @@ public class UserApiExceptionAdvice {
                 ));
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> resource(ResourceNotFoundException e) {
+        String exceptionName = "resourceNotFound";
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        getMessage(exceptionName, e.getResourceName(), e.getFieldName(), e.getFieldValue())
+                ));
+    }
+
     // MessageSource에서 에러 메시지를 가져오기 위한 private 메서드들
     private String getMessage(String exceptionName) {
-        return getMessage(exceptionName, MESSAGE, null);
+        return getYamlMessage(exceptionName, MESSAGE, null);
     }
 
-    private String getMessage(String exceptionName, String ...args) {
-        return getMessage(exceptionName, MESSAGE, args);
+    private String getMessage(String exceptionName, Object ...args) {
+        return getYamlMessage(exceptionName, MESSAGE, args);
     }
 
-    private String getMessage(String exceptionName, String property, Object[] args) {
+    private String getYamlMessage(String exceptionName, String property, Object[] args) {
         String code = exceptionName + "." + property;
 
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());

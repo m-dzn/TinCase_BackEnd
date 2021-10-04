@@ -1,4 +1,4 @@
-package com.appleisle.tincase.repository;
+package com.appleisle.tincase.repository.user;
 
 import com.appleisle.tincase.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

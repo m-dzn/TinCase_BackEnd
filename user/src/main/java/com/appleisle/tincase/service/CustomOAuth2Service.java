@@ -5,7 +5,7 @@ import com.appleisle.tincase.domain.user.UserPrincipal;
 import com.appleisle.tincase.enumclass.OAuthProvider;
 import com.appleisle.tincase.exception.OAuth2EmailEmptyException;
 import com.appleisle.tincase.exception.OAuth2ExistsException;
-import com.appleisle.tincase.repository.UserRepository;
+import com.appleisle.tincase.repository.user.UserRepository;
 import com.appleisle.tincase.security.oauth2.userinfo.OAuth2UserInfo;
 import com.appleisle.tincase.security.oauth2.userinfo.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;

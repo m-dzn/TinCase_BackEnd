@@ -4,7 +4,7 @@ import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.dto.request.JoinForm;
 import com.appleisle.tincase.exception.EmailExistsException;
 import com.appleisle.tincase.exception.ResourceNotFoundException;
-import com.appleisle.tincase.repository.UserRepository;
+import com.appleisle.tincase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,7 @@ public class UserService {
         User newUser = User.builder()
                 .email(joinForm.getEmail())
                 .password(passwordEncoder.encode(joinForm.getPassword()))
+                .nickname(joinForm.getNickname())
                 .build();
 
         userRepository.save(newUser);

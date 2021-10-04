@@ -2,7 +2,7 @@ package com.appleisle.tincase.service;
 
 import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.domain.user.UserPrincipal;
-import com.appleisle.tincase.repository.UserRepository;
+import com.appleisle.tincase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

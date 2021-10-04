@@ -12,3 +12,6 @@ oAuth2Exists:
 
 unauthorizedRedirectURI:
   msg: "인증되지 않은 Redirect URI입니다. 권한 검증을 더이상 진행할 수 없습니다."
+
+resourceNotFound:
+  msg: "{1}: {2} 인 {0} 리소스를 찾을 수 없습니다."

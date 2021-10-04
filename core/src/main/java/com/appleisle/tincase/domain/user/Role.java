@@ -1,17 +1,14 @@
 package com.appleisle.tincase.domain.user;
 
 import com.appleisle.tincase.enumclass.RoleName;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Role {
 
     @Id

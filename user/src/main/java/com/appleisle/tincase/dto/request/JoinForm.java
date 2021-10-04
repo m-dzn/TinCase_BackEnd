@@ -13,4 +13,6 @@ public class JoinForm {
 
     private String password;
 
+    private String nickname;
+
 }

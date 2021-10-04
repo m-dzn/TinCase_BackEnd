@@ -3,10 +3,7 @@ package com.appleisle.tincase.domain.user;
 import com.appleisle.tincase.domain.BaseEntity;
 import com.appleisle.tincase.enumclass.OAuthProvider;
 import com.appleisle.tincase.enumclass.RoleName;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -16,7 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
     @Id
@@ -47,12 +44,14 @@ public class User extends BaseEntity {
     private Set<Role> roles = new HashSet<>();
 
     @Builder
-    public User(String email, String password) {
+    public User(String email, String password, String nickname) {
         Assert.hasText(email, "email must not empty");
         Assert.hasText(password, "password must not empty");
+        Assert.hasText(nickname, "nickname must not empty");
 
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
         addRole(RoleName.ROLE_USER);
     }
 
