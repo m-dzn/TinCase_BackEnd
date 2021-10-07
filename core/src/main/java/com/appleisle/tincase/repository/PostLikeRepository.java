@@ -1,5 +1,6 @@
-package com.appleisle.tincase.domain.post;
+package com.appleisle.tincase.repository;
 
+import com.appleisle.tincase.domain.post.PostLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

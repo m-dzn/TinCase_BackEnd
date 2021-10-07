@@ -2,7 +2,7 @@ package com.appleisle.tincase.service;
 
 import com.appleisle.tincase.domain.post.Post;
 import com.appleisle.tincase.domain.post.PostLike;
-import com.appleisle.tincase.domain.post.PostLikeRepository;
+import com.appleisle.tincase.repository.PostLikeRepository;
 import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.dto.request.EditPostForm;
 import com.appleisle.tincase.dto.request.NewPostForm;
