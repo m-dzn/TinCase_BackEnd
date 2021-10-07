@@ -3,6 +3,7 @@ package com.appleisle.tincase.service;
 import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.domain.user.UserPrincipal;
 import com.appleisle.tincase.enumclass.OAuthProvider;
+import com.appleisle.tincase.enumclass.RoleName;
 import com.appleisle.tincase.exception.OAuth2EmailEmptyException;
 import com.appleisle.tincase.exception.OAuth2ExistsException;
 import com.appleisle.tincase.repository.user.UserRepository;
@@ -54,7 +55,7 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
         Optional<User> userOptional = userRepository.findByEmail(userInfo.getEmail());
 
         User user;
-        if (userOptional.isEmpty()) {   // 해당 이메일로 가입된 User가 없으면 가입 처리
+        if (!userOptional.isPresent()) {   // 해당 이메일로 가입된 User가 없으면 가입 처리
             user = join(userRequest, userInfo);
         } else {
             user = userOptional.get();
@@ -79,11 +80,18 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
         return userProvider.equals(registrationId);
     }
 
+    @Transactional
     private User join(OAuth2UserRequest userRequest, OAuth2UserInfo userInfo) {
-        User user = userInfo.toEntity();
+        User user = User.builder()
+                .email(userInfo.getEmail())
+                .nickname(userInfo.getName())
+                .build();
+        user.setAvatar(userInfo.getAvatar());
         user.setProvider(OAuthProvider.valueOf(userRequest.getClientRegistration().getRegistrationId()));
 
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+
+        return newUser;
     }
 
     private User updateUser(User existingUser, OAuth2UserInfo userInfo) {

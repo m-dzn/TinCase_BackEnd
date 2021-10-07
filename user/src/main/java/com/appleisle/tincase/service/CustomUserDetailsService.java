@@ -2,6 +2,7 @@ package com.appleisle.tincase.service;
 
 import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.domain.user.UserPrincipal;
+import com.appleisle.tincase.exception.ResourceNotFoundException;
 import com.appleisle.tincase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
+
+        return UserPrincipal.create(user);
+    }
+
+    @Transactional
+    public UserDetails loadUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
         return UserPrincipal.create(user);
     }

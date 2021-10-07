@@ -24,7 +24,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     // 회원 실명
@@ -37,6 +36,8 @@ public class User extends BaseEntity {
 
     private String address;
 
+    private String addressDetail;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,7 +47,7 @@ public class User extends BaseEntity {
     @Builder
     public User(String email, String password, String nickname) {
         Assert.hasText(email, "email must not empty");
-        Assert.hasText(password, "password must not empty");
+//        Assert.hasText(password, "password must not empty");
         Assert.hasText(nickname, "nickname must not empty");
 
         this.email = email;
@@ -61,6 +62,11 @@ public class User extends BaseEntity {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public void setAddress(String address, String addressDetail) {
+        this.address = address;
+        this.addressDetail = addressDetail;
     }
 
     public void setProvider(OAuthProvider provider) {

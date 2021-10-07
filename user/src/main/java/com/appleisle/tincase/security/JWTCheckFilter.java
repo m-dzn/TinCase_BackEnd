@@ -1,12 +1,14 @@
 package com.appleisle.tincase.security;
 
 import com.appleisle.tincase.domain.user.UserPrincipal;
+import com.appleisle.tincase.service.CustomUserDetailsService;
 import com.appleisle.tincase.util.JWTUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +18,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class JWTCheckFilter extends BasicAuthenticationFilter {
 
-    private final UserDetailsService userDetailsService;
     private final JWTUtil jwtUtil;
 
-    public JWTCheckFilter(AuthenticationManager authManager, UserDetailsService userDetailsService, JWTUtil jwtUtil) {
+    public JWTCheckFilter(AuthenticationManager authManager, JWTUtil jwtUtil) {
         super(authManager);
-        this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -37,18 +38,12 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        String token = bearer.substring("Bearer ".length());
-        VerifyResult result = jwtUtil.verify(token);
+        String jwt = bearer.substring("Bearer ".length());
+        VerifyResult result = jwtUtil.verify(jwt);
 
         if (result.isSuccess()) {
-            UserPrincipal userPrincipal = (UserPrincipal) userDetailsService
-                    .loadUserByUsername(result.getEmail());
-
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userPrincipal.getUsername(),
-                    null,
-                    userPrincipal.getAuthorities()
-            );
+            UsernamePasswordAuthenticationToken authToken = jwtUtil.getAuthFromToken(jwt);
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
 

@@ -39,7 +39,7 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
                 .encode(StandardCharsets.UTF_8)
                 .build().toUriString();
 
-        oAuth2RequestCookieRepository.removeAuthorizationRequest(request, response);
+        oAuth2RequestCookieRepository.removeAuthorizationRequestCookies(request, response);
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }

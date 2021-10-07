@@ -2,6 +2,7 @@ package com.appleisle.tincase.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,26 +13,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class UserPrincipal implements UserDetails, OAuth2User {
 
-    private Long id;
-
-    private String email;
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
+    private User user;
 
     public UserPrincipal(User user, Set<? extends GrantedAuthority> authorities) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
+        this.user = user;
         this.authorities = authorities;
         this.enabled = this.accountNonExpired = this.accountNonLocked = this.credentialsNonExpired = true;
     }
-
-    private String password;
 
     private Set<? extends GrantedAuthority> authorities;
 
@@ -60,9 +51,23 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         return principal;
     }
 
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
     public String getName() {
-        return String.valueOf(id);
+        return String.valueOf(user.getId());
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getEmail();
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
     }
 
 }

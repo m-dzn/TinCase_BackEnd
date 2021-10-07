@@ -11,8 +11,10 @@ public class OAuth2UserInfoFactory {
 
         if (registrationId.equalsIgnoreCase(OAuthProvider.google.toString())) {
             return new GoogleOAuth2UserInfo(attributes);
-        } else if (registrationId.equalsIgnoreCase(OAuthProvider.github.toString())) {
-            return new GithubOAuth2UserInfo(attributes);
+        } else if(registrationId.equalsIgnoreCase((OAuthProvider.naver.toString()))) {
+            return new NaverOAuth2UserInfo(attributes);
+        } else if(registrationId.equalsIgnoreCase((OAuthProvider.kakao.toString()))) {
+            return new KakaoOAuth2UserInfo(attributes);
         } else {
             throw new OAuth2InvalidProviderException(registrationId);
         }

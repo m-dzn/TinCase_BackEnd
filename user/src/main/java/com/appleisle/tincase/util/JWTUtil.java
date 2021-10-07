@@ -2,13 +2,15 @@ package com.appleisle.tincase.util;
 
 import com.appleisle.tincase.domain.user.UserPrincipal;
 import com.appleisle.tincase.security.VerifyResult;
+import com.appleisle.tincase.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +18,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public final class JWTUtil {
 
     @Value("${app.jwt.secretKey}")
@@ -24,6 +27,8 @@ public final class JWTUtil {
     private int expirationInMs;
 
     private Key key;
+
+    private final CustomUserDetailsService userDetailsService;
 
     @PostConstruct
     void init() {
@@ -45,6 +50,22 @@ public final class JWTUtil {
                 .compact();
     }
 
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.parseLong(claims.getSubject());
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthFromToken(String token) {
+        Long id = getUserIdFromToken(token);
+        UserDetails userDetails = userDetailsService.loadUserById(id);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
     public VerifyResult verify(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
@@ -53,9 +74,11 @@ public final class JWTUtil {
                     .parseClaimsJws(token)
                     .getBody();
 
+            Long userId = Long.valueOf(claims.getSubject());
+
             return VerifyResult.builder()
                     .success(true)
-                    .email(claims.getSubject())
+                    .id(userId)
                     .build();
         } catch (Exception e) {
             return VerifyResult.builder()

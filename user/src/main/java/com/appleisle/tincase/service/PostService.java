@@ -1,6 +1,8 @@
 package com.appleisle.tincase.service;
 
 import com.appleisle.tincase.domain.post.Post;
+import com.appleisle.tincase.domain.post.PostLike;
+import com.appleisle.tincase.domain.post.PostLikeRepository;
 import com.appleisle.tincase.domain.user.User;
 import com.appleisle.tincase.dto.request.EditPostForm;
 import com.appleisle.tincase.dto.request.NewPostForm;
@@ -25,6 +27,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional
     public Long writePost(NewPostForm newPostForm) {
@@ -37,11 +40,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDetailResponse readPost(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+    public PostDetailResponse readPost(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
 
-        return PostDetailResponse.of(post);
+        if (userId == null) {
+            return PostDetailResponse.of(post);
+        }
+
+        boolean like = postLikeRepository.findByPostIdAndUserId(postId, userId).isPresent();
+        return PostDetailResponse.of(post, like);
     }
 
     @Transactional
@@ -64,11 +72,32 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Pagination<PostSummary> getPostListDesc(Integer pageNum, Integer pageSize) {
-        PageRequest pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "createdAt");
+        PageRequest pageable = PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "createdAt");
         Page<PostSummary> postPages = postRepository.findAll(pageable)
                 .map(PostSummary::of);
 
         return Pagination.of(postPages);
+    }
+
+    @Transactional
+    public void likePost(Long postId, Long userId) {
+        Post post = postRepository.getById(postId);
+        PostLike postLike = PostLike.builder()
+                .post(post)
+                .user(userRepository.getById(userId))
+                .build();
+
+        postLikeRepository.save(postLike);
+        post.increaseLikeCnt();
+    }
+
+    @Transactional
+    public void unlikePost(Long postId, Long userId) {
+        PostLike postLike = postLikeRepository.findByPostIdAndUserId(postId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("PostLike", "postId & userId", postId + ", " + userId));
+
+        postLike.getPost().decreaseLikeCnt();
+        postLikeRepository.delete(postLike);
     }
 
 }

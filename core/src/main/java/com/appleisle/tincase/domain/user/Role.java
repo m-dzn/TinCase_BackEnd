@@ -4,6 +4,7 @@ import com.appleisle.tincase.enumclass.RoleName;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -23,5 +24,14 @@ public class Role {
         this.id = name.getId();
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Role)) return false;
+
+        Role that = (Role) o;
+        return Objects.equals(this.id, that.id);
+    }
+
 
 }

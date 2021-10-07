@@ -10,6 +10,6 @@ import lombok.*;
 public class VerifyResult {
 
     private boolean success;
-    private String email;
+    private Long id;
 
 }

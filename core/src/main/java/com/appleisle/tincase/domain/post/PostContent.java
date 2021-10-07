@@ -18,7 +18,6 @@ public class PostContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_content_id")
     private Long id;
-
     
     private String content;
 

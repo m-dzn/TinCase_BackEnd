@@ -5,6 +5,7 @@ import com.appleisle.tincase.security.JWTLoginFilter;
 import com.appleisle.tincase.security.oauth2.OAuth2FailureHandler;
 import com.appleisle.tincase.security.oauth2.OAuth2RequestCookieRepository;
 import com.appleisle.tincase.security.oauth2.OAuth2SuccessHandler;
+import com.appleisle.tincase.service.CustomUserDetailsService;
 import com.appleisle.tincase.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final JWTUtil jwtUtil;
 
     // OAuth2 관련 의존성
@@ -56,10 +56,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JWTLoginFilter jwtLoginFilter = new JWTLoginFilter(authenticationManager(), jwtUtil);
-        JWTCheckFilter jwtCheckFilter = new JWTCheckFilter(authenticationManager(), userDetailsService, jwtUtil);
+        JWTCheckFilter jwtCheckFilter = new JWTCheckFilter(authenticationManager(), jwtUtil);
 
         http
                 .csrf().disable()
+                .cors();
+
+        http
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

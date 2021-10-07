@@ -2,20 +2,20 @@ package com.appleisle.tincase.security.oauth2.userinfo;
 
 import java.util.Map;
 
-public class GithubOAuth2UserInfo extends OAuth2UserInfo {
+public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
-    public GithubOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
+    public NaverOAuth2UserInfo(Map<String, Object> attributes) {
+        super((Map<String, Object>) attributes.get("response"));
     }
 
     @Override
     public String getId() {
-        return ((Integer) attributes.get("id")).toString();
+        return (String) attributes.get("id");
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+        return (String) attributes.get("nickname");
     }
 
     @Override
@@ -25,7 +25,7 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getAvatar() {
-        return (String) attributes.get("avatar_url");
+        return (String) attributes.get("profile_image");
     }
 
 }

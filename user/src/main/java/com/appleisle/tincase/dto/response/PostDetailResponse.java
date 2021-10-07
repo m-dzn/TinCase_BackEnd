@@ -17,6 +17,8 @@ public class PostDetailResponse {
 
     private String writer;
 
+    private Long writerId;
+
     private String content;
 
     private LocalDateTime createdAt;
@@ -29,10 +31,13 @@ public class PostDetailResponse {
 
     private Integer likeCnt;
 
+    private Boolean like;
+
     public PostDetailResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.writer = post.getWriter().getNickname();
+        this.writerId = post.getWriter().getId();
         this.content = post.getContent().getContent();
         this.createdAt = post.getCreatedAt();
         this.updatedAt = post.getUpdatedAt();
@@ -41,8 +46,17 @@ public class PostDetailResponse {
         this.likeCnt = post.getLikeCnt();
     }
 
+    public PostDetailResponse(Post post, boolean like) {
+        this(post);
+        this.like = like;
+    }
+
     public static PostDetailResponse of(Post post) {
         return new PostDetailResponse(post);
+    }
+
+    public static PostDetailResponse of(Post post, boolean like) {
+        return new PostDetailResponse(post, like);
     }
 
 }

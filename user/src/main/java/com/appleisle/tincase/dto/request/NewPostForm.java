@@ -3,7 +3,6 @@ package com.appleisle.tincase.dto.request;
 import com.appleisle.tincase.domain.post.Post;
 import com.appleisle.tincase.domain.post.PostContent;
 import com.appleisle.tincase.domain.user.User;
-import com.appleisle.tincase.repository.user.UserRepository;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;

@@ -40,7 +40,8 @@ subprojects {
 		annotationProcessor lombok
 		testAnnotationProcessor lombok
 
-		runtimeOnly 'com.h2database:h2'
+//		runtimeOnly 'com.h2database:h2'
+		implementation 'mysql:mysql-connector-java'
 
 		testImplementation "$boot:spring-boot-starter-test"
 	}

@@ -28,11 +28,11 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "post_content_id")
     private PostContent content;
 
-    private Integer viewCnt;
+    private Integer viewCnt = 0;
 
-    private Integer replyCnt;
+    private Integer replyCnt = 0;
 
-    private Integer likeCnt;
+    private Integer likeCnt = 0;
 
     @Builder
     public Post(String title, User writer, PostContent content) {
@@ -45,4 +45,12 @@ public class Post extends BaseEntity {
         this.title = title;
     }
 
+    public void increaseLikeCnt() {
+        this.likeCnt++;
+    }
+
+    public void decreaseLikeCnt() {
+        if (likeCnt == 0) return;
+        this.likeCnt--;
+    }
 }
